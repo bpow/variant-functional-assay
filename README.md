@@ -1,3 +1,5 @@
-# Placeholder README
-This file will be replaced in the build process.  The details about how to use this template
-can be found in [ABOUT.md](./ABOUT.md).
+# LinkML Data model for functional evidence of genetic variant effect
+This is a really nice model that
+does stuff (or at least, it might, eventually...)
+
+## [Documentation](https://bpow.github.io/variant-functional-assay/)

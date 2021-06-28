@@ -1,0 +1,65 @@
+id: https://example.org/linkml/hello-world
+title: Really basic LinkML model
+name: functional-assay
+license: https://creativecommons.org/publicdomain/zero/1.0/
+version: 0.0.1
+
+prefixes:
+  linkml: https://w3id.org/linkml/
+  iao: http://purl.obolibrary.org/obo/IAO_
+  ro: http://purl.obolibrary.org/obo/RO_
+  sepio: http://purl.obolibrary.org/obo/SEPIO_
+  sepio-cg: http://purl.obolibrary.org/obo/SEPIOCG_
+  sdo: https://schema.org/
+
+default_prefix: sepio-cg
+default_curi_maps:
+  - semweb_context
+
+imports:
+  - linkml:types
+
+slots:
+  disease:
+    description: A recognizible grouping of pathological observed phenotypes occuring from a common cause
+    slot_uri: sepio-cg:98901
+
+classes:
+  GeneticCondition:
+    description: A disease, or a set of one or more co-occurring phenotypes, typically controlled by a single locus with a defined inheritance pattern.
+    class_uri: sepio:0000219
+    slots:
+      - disease
+    slot_usage:
+      disease:
+        multivalued: true
+    attributes:
+      phenotype:
+        description: Phyenotypes used to define the Genetic Condition
+        slot_uri: sepio-cg:98902
+        multivalued: true
+      gene:
+        description: The gene associated with a particular Genetic Condition
+        slot_uri: sepio:0000278
+      inheritance_pattern:
+        description: The manner in which a genetic condition is inherited
+        slot_uri: ro:0000091
+      label:
+        description: A name given to the resource
+        slot_uri: rdfs:label
+      description:
+        description: >
+          Description may include but is not limited to: an abstract, a table of contents,
+          a graphical representation, or a free-text account of the resource.
+        slot_uri: dc:description
+
+  Document:
+    description: A collection of information content entities intended to be understood together as a whole
+    class_uri: iao:0000310
+    attributes:
+      pmid:
+        description: Identifier of a manuscript in PubMed database
+        identifier: true
+      pmc_id:
+        description: Identifier of a manuscript in PubMedCentral database
+
