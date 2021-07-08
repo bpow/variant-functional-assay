@@ -6,44 +6,92 @@ version: 0.0.1
 
 prefixes:
   linkml: https://w3id.org/linkml/
-  iao: http://purl.obolibrary.org/obo/IAO_
-  ro: http://purl.obolibrary.org/obo/RO_
-  sepio: http://purl.obolibrary.org/obo/SEPIO_
+  biolink: https://w3id.org/biolink/biolink-model
+  RO: http://purl.obolibrary.org/obo/RO_
+  SEPIO: http://purl.obolibrary.org/obo/SEPIO_
   sepio-cg: http://purl.obolibrary.org/obo/SEPIOCG_
   sdo: https://schema.org/
+  CAID: http://reg.clinicalgenome.org/redmine/projects/registry/genboree_registry/by_caid?caid=
 
 default_prefix: sepio-cg
 default_curi_maps:
   - semweb_context
+  - monarch_context
+  - obo_context
 
 imports:
   - linkml:types
 
+types:
+  unit:
+    typeof: string
+    uri: UO:0000000
+    id_prefixes:
+    - UO
+  phenotype:
+    typeof: string
+
 slots:
-  disease:
+  associated disease:
     description: A recognizible grouping of pathological observed phenotypes occuring from a common cause
     slot_uri: sepio-cg:98901
+    range: disease
+  
+  has phenotype:
+    description: An expressed characteristic of an organism
+    slot_uri: RO:0002200
+    range: phenotypic feature
+  
+  has gene:
+    description: Connects an entity associated with one or more genes
+    range: gene
+
 
 classes:
+
+  disease:
+    exact_mappings:
+    - MONDO:0000001
+    - DOID:4
+    id_prefixes:
+    - MONDO
+    - DOID
+    - OMIM
+    - Orphanet
+
+  phenotypic feature:
+    id_prefixes:
+    - HP
+  
+  gene:
+    attributes:
+    - symbol
+    - synonym
+    - xref
+    id_prefixes:
+    - HGNC
+    - NCBIGene
+
   GeneticCondition:
     description: A disease, or a set of one or more co-occurring phenotypes, typically controlled by a single locus with a defined inheritance pattern.
-    class_uri: sepio:0000219
+    class_uri: SEPIO:0000219
     slots:
-      - disease
+      - associated disease
+      - has phenotype
+      - has gene
     slot_usage:
-      disease:
+      associated disease:
         multivalued: true
-    attributes:
-      phenotype:
-        description: Phyenotypes used to define the Genetic Condition
-        slot_uri: sepio-cg:98902
+      has phenotype:
         multivalued: true
-      gene:
+      has gene:
         description: The gene associated with a particular Genetic Condition
-        slot_uri: sepio:0000278
+        slot_uri: SEPIO:0000278
+
+    attributes:
       inheritance_pattern:
         description: The manner in which a genetic condition is inherited
-        slot_uri: ro:0000091
+        slot_uri: RO:0000091
       label:
         description: A name given to the resource
         slot_uri: rdfs:label
@@ -55,7 +103,7 @@ classes:
 
   Document:
     description: A collection of information content entities intended to be understood together as a whole
-    class_uri: iao:0000310
+    class_uri: IAO:0000310
     attributes:
       pmid:
         description: Identifier of a manuscript in PubMed database
@@ -63,3 +111,67 @@ classes:
       pmc_id:
         description: Identifier of a manuscript in PubMedCentral database
 
+  Variant:
+    description: A genetic variant, preferably identified by a canonical allele id
+    slots:
+      - has gene
+    attributes:
+      canonical_allele_id:
+        identifier: true
+        required: true
+      hgvs c:
+      hgvs p:
+      clinvar id:
+      legacy name:
+        multivalued: true
+    
+  FunctionalAssay:
+    description:
+    attributes:
+      general class:
+        description: BAO, ECO or similar terms describing the general class of assay performed
+        multivalued: true
+      material used:
+        description: CLO, CO or BAI terms
+        multivalued: true
+      description:
+        description: Free-text description/summary of the assay
+      additional publication:
+        description: Publications referenced in this manuscript as providing details about the assay
+        multivalued: true
+      read out description:
+        description: Free-text description of the type of readout of the assay
+      range:
+        description: Range of all possible values of the assay. If qualitative, list the allowable values/categories. If quantitative, provide the units used
+      normal range:
+      abnormal range:
+      indeterminate range:
+      validation control pathogenic:
+      validation control benign:
+      replication:
+      statistical analysis description:
+      significance threshold:
+      comment:
+      range type:
+      units:
+      
+  FunctionalAssayResult:
+    description:
+    attributes:
+      result:
+        required: true
+      result assertion:
+      assay:
+        range: FunctionalAssay
+      variant:
+        range: Variant
+      units:
+      is validation control:
+      replicate count:
+      standard deviation:
+      standard error of mean:
+      range:
+      intraquartile range:
+      p value:
+      control type:
+      approximation:
